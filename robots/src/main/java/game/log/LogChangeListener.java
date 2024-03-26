@@ -1,4 +1,4 @@
-package log;
+package game.log;
 
 public interface LogChangeListener
 {
