@@ -1,23 +1,20 @@
 package game.views;
 
-import game.model.GameModel;
-import game.model.Robot;
-import game.views.painter.RobotPainter;
-import game.views.painter.TargetPainter;
+import game.model.Entity;
+import game.viewmodels.EntitiesProvider;
+import game.views.painter.PaintingContext;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+
 
 public class GameView extends JPanel {
-    private final GameModel gameModel;
-    RobotPainter robotDrawer;
-    TargetPainter targetDrawer;
+    private final EntitiesProvider entitiesProvider;
+    private final PaintingContext paintingContext ;
 
-    public GameView(GameModel gameModel) {
-        robotDrawer = new RobotPainter();
-        targetDrawer = new TargetPainter();
-        this.gameModel = gameModel;
+    public GameView(EntitiesProvider entitiesProvider) {
+        this.entitiesProvider = entitiesProvider;
+        this.paintingContext = new PaintingContext();
         setDoubleBuffered(true);
     }
 
@@ -33,10 +30,8 @@ public class GameView extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        ArrayList<Robot> robots = (ArrayList<Robot>) gameModel.getRobots();
-        for (Robot robot : robots) {
-            robotDrawer.drawRobot(g2d, robot);
-            targetDrawer.drawTarget(g2d, robot.getTarget());
+        for (Entity entity : entitiesProvider.getEntities()) {
+            paintingContext.paint(g2d, entity);
         }
     }
 }

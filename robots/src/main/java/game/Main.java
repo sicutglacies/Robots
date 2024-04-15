@@ -1,5 +1,7 @@
 package game;
 
+import game.viewmodels.EntitiesProvider;
+import game.viewmodels.SimpleEntityProvider;
 import game.views.GameView;
 import game.views.GameWindow;
 import game.model.GameModel;
@@ -16,7 +18,8 @@ public class Main {
             e.printStackTrace();
         }
         GameModel gameModel = new GameModel();
-        GameView gameView = new GameView(gameModel);
+        EntitiesProvider entitiesProvider = new SimpleEntityProvider(gameModel);
+        GameView gameView = new GameView(entitiesProvider);
         GameWindow gameWindow = new GameWindow(gameView);
         GameViewModel viewModel = new GameViewModel(gameModel, gameWindow);
 
