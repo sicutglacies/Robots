@@ -3,14 +3,13 @@ package game.model;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
     private static ModelSettings modelSettings;
     private final List<Entity> entities = new ArrayList<>();
-    private PropertyChangeSupport pclSupport;
+    private final PropertyChangeSupport pclSupport;
 
     public GameModel() {
         this.pclSupport = new PropertyChangeSupport(this);

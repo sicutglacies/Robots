@@ -13,8 +13,8 @@ import java.util.TimerTask;
 
 
 public class GameViewModel {
-    private GameModel gameModel;
-    private GameWindow gameWindow;
+    private final GameModel gameModel;
+    private final GameWindow gameWindow;
     private final java.util.Timer timer = initTimer();
 
     private static java.util.Timer initTimer() {

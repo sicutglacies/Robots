@@ -1,6 +1,5 @@
 package game.views.painter;
 
-import game.model.Entity;
 import game.model.Robot;
 
 import java.awt.*;
