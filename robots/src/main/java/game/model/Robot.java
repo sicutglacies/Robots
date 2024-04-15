@@ -3,10 +3,7 @@ package game.model;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import game.model.MathUtils;
-import game.model.GameModel;
 
-import static game.model.MathUtils.calculateAngularVelocity;
 
 public class Robot implements Entity {
     private double positionX;
@@ -83,13 +80,6 @@ public class Robot implements Entity {
         double velocity = Robot.maxVelocity;
         double angleToTarget = MathUtils.angleTo(getPositionX(), getPositionY(),
                 target.p().x, target.p().y);
-//        double angularVelocity = 0;
-//        if (angleToTarget > getRobotDirection()) {
-//            angularVelocity = Robot.maxAngularVelocity;
-//        }
-//        if (angleToTarget < getRobotDirection()) {
-//            angularVelocity = -Robot.maxAngularVelocity;
-//        }
 
         double angularVelocity = MathUtils.calculateAngularVelocity(angleToTarget, getRobotDirection(), Robot.maxAngularVelocity);
 
