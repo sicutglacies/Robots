@@ -31,7 +31,7 @@ public class GameViewModel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                gameModel.setDimension(gameWindow.getSize());
+                GameModel.initModelSettings(gameWindow.getSize());
                 getGameView().updateView();
             }
         }, 0, 50);
@@ -53,9 +53,7 @@ public class GameViewModel {
             @Override
             public void componentResized(final ComponentEvent e) {
                 super.componentResized(e);
-                System.out.println("resize");
-                gameModel.setDimension((gameWindow.getSize()));
-                System.out.println(gameModel.getDimension());
+                GameModel.initModelSettings((gameWindow.getSize()));
             }
         });
     }
