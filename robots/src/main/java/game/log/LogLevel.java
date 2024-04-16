@@ -1,4 +1,4 @@
-package log;
+package game.log;
 
 public enum LogLevel
 {
