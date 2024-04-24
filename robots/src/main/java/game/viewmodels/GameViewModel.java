@@ -1,8 +1,10 @@
 package game.viewmodels;
 
+import game.log.LogWindow;
 import game.views.GameView;
 import game.views.GameWindow;
 import game.model.GameModel;
+import game.views.locale.Localizer;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -15,15 +17,17 @@ import java.util.TimerTask;
 public class GameViewModel {
     private final GameModel gameModel;
     private final GameWindow gameWindow;
+    private final LogWindow logWindow;
     private final java.util.Timer timer = initTimer();
 
     private static java.util.Timer initTimer() {
         return new Timer("events generator", true);
     }
 
-    public GameViewModel(GameModel gameModel, GameWindow gameWindow) {
+    public GameViewModel(GameModel gameModel, GameWindow gameWindow, LogWindow logWindow) {
         this.gameModel = gameModel;
         this.gameWindow = gameWindow;
+        this.logWindow = logWindow;
         initGameListeners();
     }
 
@@ -56,6 +60,9 @@ public class GameViewModel {
                 GameModel.initModelSettings((gameWindow.getSize()));
             }
         });
+
+        Localizer.registerListener(gameWindow);
+        Localizer.registerListener(logWindow);
     }
 
     public GameView getGameView() {
@@ -64,5 +71,9 @@ public class GameViewModel {
 
     public GameWindow getGameWindow() {
         return gameWindow;
+    }
+
+    public LogWindow getLogWindow() {
+        return logWindow;
     }
 }
