@@ -1,11 +1,13 @@
 package game.viewmodels;
 
 import game.log.LogWindow;
+import game.model.Wall;
 import game.views.GameView;
 import game.views.GameWindow;
 import game.model.GameModel;
 import game.views.locale.Localizer;
 
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -29,6 +31,7 @@ public class GameViewModel {
         this.gameWindow = gameWindow;
         this.logWindow = logWindow;
         initGameListeners();
+        initGameField();
     }
 
     private void initGameListeners() {
@@ -63,6 +66,11 @@ public class GameViewModel {
 
         Localizer.registerListener(gameWindow);
         Localizer.registerListener(logWindow);
+    }
+
+    private void initGameField() {
+        gameModel.addWalls();
+        gameModel.addRobot();
     }
 
     public GameView getGameView() {

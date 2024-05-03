@@ -1,5 +1,7 @@
 package game.model;
 
+import java.util.ArrayList;
+
 public class MathUtils {
     public static double distance(double x1, double y1, double x2, double y2) {
         double diffX = x1 - x2;
@@ -41,5 +43,26 @@ public class MathUtils {
         if (value < min)
             return min;
         return Math.min(value, max);
+    }
+
+    public static double[] setBoundaries(
+            double currX, double currY, double stepX, double stepY, ArrayList<Wall> walls) {
+
+        for (Wall wall: walls) {
+            double xMin = wall.getPoint().x;
+            double yMin = wall.getPoint().y;
+            double xMax = xMin + wall.getWidth();
+            double yMax = yMin + wall.getHeight();
+
+            if (stepX >= xMin && stepX <= xMax && stepY >= yMin && stepY <= yMax) {
+                stepX = Math.max(xMin, Math.min(currX, xMax));
+                stepY = Math.max(yMin, Math.min(currY, yMax));
+            }
+        }
+        return new double[]{ stepX, stepY };
+    }
+
+    public static int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 }

@@ -13,10 +13,6 @@ public class GameModel {
 
     public GameModel() {
         this.pclSupport = new PropertyChangeSupport(this);
-
-        entities.add(new Robot());
-        for (Entity robot : entities)
-            addPropertyChangeListener(robot);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -27,12 +23,25 @@ public class GameModel {
     }
 
     public void updateModel() {
-        for (Entity robot : entities)
-            robot.update();
+        for (Entity entity : entities)
+            entity.update();
     }
 
     public List<Entity> getEntities() {
         return entities;
+    }
+
+    public void addWalls() {
+        for (Entity wall : Wall.generateWalls()) {
+            addPropertyChangeListener(wall);
+            this.entities.add(wall);
+        }
+    }
+
+    public void addRobot() {
+        Robot robot = new Robot();
+        addPropertyChangeListener(robot);
+        this.entities.add(robot);
     }
 
     public void setTarget(Point point) {

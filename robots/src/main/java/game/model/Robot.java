@@ -3,9 +3,11 @@ package game.model;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 
 
 public class Robot implements Entity {
+    public static ArrayList<Wall> walls;
     private double positionX;
     private double positionY;
     private Target target;
@@ -64,8 +66,14 @@ public class Robot implements Entity {
         if (!Double.isFinite(newY)) {
             newY = getPositionY() + velocity * duration * Math.sin(getRobotDirection());
         }
-        setPositionX(MathUtils.normalize(newX, 0, GameModel.getModelSettings().getDimension().width));
-        setPositionY(MathUtils.normalize(newY, 0, GameModel.getModelSettings().getDimension().height));
+
+        newX = MathUtils.normalize(newX, 0, GameModel.getModelSettings().getDimension().width);
+        newY = MathUtils.normalize(newY, 0, GameModel.getModelSettings().getDimension().height);
+
+        double[] results = MathUtils.setBoundaries(getPositionX(), getPositionY(), newX, newY, walls);
+
+        setPositionX(results[0]);
+        setPositionY(results[1]);
         double newDirection = MathUtils.asNormalizedRadians(getRobotDirection() + angularVelocity * duration);
         setRobotDirection(newDirection);
     }
@@ -74,7 +82,7 @@ public class Robot implements Entity {
     public void update() {
         double distance = MathUtils.distance(target.p().x, target.p().y,
                 getPositionX(), getPositionY());
-        if (distance < 0.5) {
+        if (distance < 10) {
             return;
         }
         double velocity = Robot.maxVelocity;
