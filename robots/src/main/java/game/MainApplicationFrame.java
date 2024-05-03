@@ -15,13 +15,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Locale;
-import java.util.ResourceBundle;
+import static game.views.locale.Localizer.bundle;
 
 
 public class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
-    public static ResourceBundle bundle =
-            ResourceBundle.getBundle("GameBundle", new Locale("en", "US"));
 
     public MainApplicationFrame(GameViewModel gameViewModel) {
 
@@ -57,7 +55,7 @@ public class MainApplicationFrame extends JFrame {
     }
 
     private void addMenuItem(MenuItem menu, String label, ActionListener itemListener) {
-        MenuItem item = MenuItem.instantiate(new JMenuItem(label), label);
+        MenuItem item = new MenuItem(new JMenuItem(), label);
         Localizer.registerListener(item);
         item.getItem().addActionListener(itemListener);
         menu.getItem().add(item.getItem());
@@ -70,21 +68,21 @@ public class MainApplicationFrame extends JFrame {
 
     private MenuItem generateLangMenu(){
         MenuItem langMenu =
-                MenuItem.instantiate(new JMenu(bundle.getString("lang")), "lang");
+                new MenuItem(new JMenu(bundle.getString("lang")), "lang");
 
         langMenu.getItem().setMnemonic(KeyEvent.VK_C);
         langMenu.getItem().getAccessibleContext().setAccessibleDescription("Выбрать язык");
 
-        MenuItem russian = MenuItem.instantiate(new JMenuItem("Русский"), "Русский");
+        MenuItem russian = new MenuItem(new JMenuItem("Русский"), "Русский");
         addMenuItem(langMenu, russian, event -> Localizer.changeLanguage(new Locale("ru", "RU")));
 
-        MenuItem english = MenuItem.instantiate(new JMenuItem("English"), "English");
+        MenuItem english = new MenuItem(new JMenuItem("English"), "English");
         addMenuItem(langMenu, english, event -> Localizer.changeLanguage(new Locale("en", "US")));
 
-        MenuItem german = MenuItem.instantiate(new JMenuItem("Deutsch"), "Deutsch");
+        MenuItem german = new MenuItem(new JMenuItem("Deutsch"), "Deutsch");
         addMenuItem(langMenu, german, event -> Localizer.changeLanguage(new Locale("de", "DE")));
 
-        MenuItem chinese = MenuItem.instantiate(new JMenuItem("中文"), "中文");
+        MenuItem chinese = new MenuItem(new JMenuItem("中文"), "中文");
         addMenuItem(langMenu, chinese, event -> Localizer.changeLanguage(new Locale("zh", "CN")));
 
         Localizer.registerListener(langMenu);
@@ -92,7 +90,7 @@ public class MainApplicationFrame extends JFrame {
     }
 
     private MenuItem generateTestMenu(){
-        MenuItem testMenu = MenuItem.instantiate(new JMenu(bundle.getString("testCommands")), "testCommands");
+        MenuItem testMenu = new MenuItem(new JMenu(bundle.getString("testCommands")), "testCommands");
         testMenu.getItem().setMnemonic(KeyEvent.VK_T);
         testMenu.getItem().getAccessibleContext().
                 setAccessibleDescription(bundle.getString("testCommands"));
@@ -107,7 +105,7 @@ public class MainApplicationFrame extends JFrame {
 
     private MenuItem generateLookAndFeelMenu(){
         MenuItem lookAndFeelMenu =
-                MenuItem.instantiate(new JMenu(bundle.getString("mode")), "mode");
+                new MenuItem(new JMenu(bundle.getString("mode")), "mode");
 
         lookAndFeelMenu.getItem().setMnemonic(KeyEvent.VK_V);
         lookAndFeelMenu.getItem().getAccessibleContext()

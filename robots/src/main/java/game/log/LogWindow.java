@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import static game.MainApplicationFrame.bundle;
+import static game.views.locale.Localizer.bundle;
 
 public class LogWindow extends JInternalFrame implements LogChangeListener, LocaleChangeListener {
     private LogWindowSource m_logSource;

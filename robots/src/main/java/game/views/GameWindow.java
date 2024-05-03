@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
 
-import static game.MainApplicationFrame.bundle;
+import static game.views.locale.Localizer.bundle;
 
 public class GameWindow extends JInternalFrame implements LocaleChangeListener {
     private final GameView gameView;

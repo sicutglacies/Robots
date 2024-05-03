@@ -11,8 +11,7 @@ import game.viewmodels.GameViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
+
 
 public class Main {
     public static void main(String[] args) {

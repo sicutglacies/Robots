@@ -1,19 +1,17 @@
 package game.views.locale;
 
-import game.Main;
-import game.MainApplicationFrame;
-
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Localizer {
-    private static final ArrayList<LocaleChangeListener> listeners = new ArrayList<>();
+    private static final CopyOnWriteArrayList<LocaleChangeListener> listeners = new CopyOnWriteArrayList<>();
+    public static ResourceBundle bundle =
+            ResourceBundle.getBundle("GameBundle", new Locale("en", "US"));
 
     public static void changeLanguage(Locale locale) {
-        MainApplicationFrame.bundle = ResourceBundle.getBundle("GameBundle", locale);
-        ResourceBundle bundle = MainApplicationFrame.bundle;
+        bundle = ResourceBundle.getBundle("GameBundle", locale);
         update(bundle);
     }
 
