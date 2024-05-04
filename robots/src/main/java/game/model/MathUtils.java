@@ -1,5 +1,6 @@
 package game.model;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class MathUtils {
@@ -64,5 +65,16 @@ public class MathUtils {
 
     public static int getRandomNumber(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
+    }
+
+    public static Point getRandomPoint(int xMin, int yMin, int xMax, int yMax) {
+        int randomX = getRandomNumber(0, xMax);
+        int randomY = getRandomNumber(0, yMax);
+
+        while (randomX >= 0 && randomX <= xMin && randomY >= 0 & randomY <= yMin) {
+            randomX = getRandomNumber(0, xMax);
+            randomY = getRandomNumber(0, yMax);
+        }
+        return new Point(randomX, randomY);
     }
 }

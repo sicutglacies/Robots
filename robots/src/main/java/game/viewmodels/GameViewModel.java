@@ -61,6 +61,7 @@ public class GameViewModel {
             public void componentResized(final ComponentEvent e) {
                 super.componentResized(e);
                 GameModel.initModelSettings((gameWindow.getSize()));
+                gameModel.addWalls();
             }
         });
 
@@ -69,8 +70,8 @@ public class GameViewModel {
     }
 
     private void initGameField() {
-        gameModel.addWalls();
         gameModel.addRobot();
+        gameModel.addWalls();
     }
 
     public GameView getGameView() {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 
 public class Robot implements Entity {
-    public static ArrayList<Wall> walls;
+    public static ArrayList<Wall> walls = new ArrayList<>();
     private double positionX;
     private double positionY;
     private Target target;
@@ -82,7 +82,7 @@ public class Robot implements Entity {
     public void update() {
         double distance = MathUtils.distance(target.p().x, target.p().y,
                 getPositionX(), getPositionY());
-        if (distance < 10) {
+        if (distance < 0.5) {
             return;
         }
         double velocity = Robot.maxVelocity;

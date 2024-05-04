@@ -5,11 +5,14 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 
 import static game.model.MathUtils.getRandomNumber;
+import static game.model.MathUtils.getRandomPoint;
 
 
 public class Wall implements Entity {
-    public static int wallCountMin = 10;
-    public static int wallCountMax = 30;
+    public static Dimension maxDimension = new Dimension(800, 800);
+    public static int attempt = 0;
+    public static int wallCountMin = 16;
+    public static int wallCountMax = 100;
     public static int minBorderX = 0;
     public static int minBorderY = 0;
     private final int width;
@@ -24,18 +27,36 @@ public class Wall implements Entity {
 
     public static ArrayList<Wall> generateWalls() {
         Dimension dimension = GameModel.getModelSettings().getDimension();
+
+        if (attempt != 0) {
+            wallCountMin = 0;
+            wallCountMax = 0;
+        }
+
+        if (dimension.width - maxDimension.width > 50 || dimension.height - maxDimension.height > 50) {
+            wallCountMin = (dimension.width * dimension.height - maxDimension.width * maxDimension.height) / (16 * 2500);
+            wallCountMax = (dimension.width * dimension.height - maxDimension.width * maxDimension.height) / (16 * 400);
+            minBorderX = maxDimension.width;
+            minBorderY = maxDimension.height;
+            maxDimension = dimension;
+        }
+
+        attempt = 1;
+        ArrayList<Wall> walls = generateWallsParameters(dimension);
+        Robot.walls.addAll(walls);
+        return walls;
+    }
+
+    private static ArrayList<Wall> generateWallsParameters(Dimension dimension) {
         ArrayList<Wall> walls = new ArrayList<>();
 
         for (int i = 0; i < getRandomNumber(wallCountMin, wallCountMax); i++){
             int wallWidth = getRandomNumber(20, 50);
             int wallHeight = getRandomNumber(20, 50);
-            int randomX = getRandomNumber(minBorderX, dimension.width-wallWidth);
-            int randomY = getRandomNumber(minBorderY, dimension.height-wallHeight);
+            Point p = getRandomPoint(minBorderX, minBorderY, dimension.width-wallWidth, dimension.height-wallHeight);
 
-            walls.add(new Wall(new Point(randomX, randomY), wallWidth, wallHeight));
+            walls.add(new Wall(p, wallWidth, wallHeight));
         }
-        Robot.walls = walls;
-
         return walls;
     }
 
