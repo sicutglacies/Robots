@@ -3,6 +3,7 @@ package game.model;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 import static game.model.MathUtils.getRandomNumber;
 import static game.model.MathUtils.getRandomPoint;
@@ -10,7 +11,6 @@ import static game.model.MathUtils.getRandomPoint;
 
 public class Wall implements Entity {
     public static Dimension maxDimension = new Dimension(800, 800);
-    public static int attempt = 0;
     public static int wallCountMin = 16;
     public static int wallCountMax = 100;
     public static int minBorderX = 0;
@@ -25,13 +25,8 @@ public class Wall implements Entity {
         this.height = height;
     }
 
-    public static ArrayList<Wall> generateWalls() {
+    public static List<Wall> generateWalls() {
         Dimension dimension = GameModel.getModelSettings().getDimension();
-
-        if (attempt != 0) {
-            wallCountMin = 0;
-            wallCountMax = 0;
-        }
 
         if (dimension.width - maxDimension.width > 50 || dimension.height - maxDimension.height > 50) {
             wallCountMin = (dimension.width * dimension.height - maxDimension.width * maxDimension.height) / (16 * 2500);
@@ -41,16 +36,17 @@ public class Wall implements Entity {
             maxDimension = dimension;
         }
 
-        attempt = 1;
-        ArrayList<Wall> walls = generateWallsParameters(dimension);
-        Robot.walls.addAll(walls);
+        List<Wall> walls = generateWallsParameters(dimension);
+        wallCountMin = 0;
+        wallCountMax = 0;
         return walls;
     }
 
-    private static ArrayList<Wall> generateWallsParameters(Dimension dimension) {
-        ArrayList<Wall> walls = new ArrayList<>();
+    private static List<Wall> generateWallsParameters(Dimension dimension) {
+        List<Wall> walls = new ArrayList<>();
+        int wallCount = getRandomNumber(wallCountMin, wallCountMax);
 
-        for (int i = 0; i < getRandomNumber(wallCountMin, wallCountMax); i++){
+        for (int i = 0; i < wallCount; i++) {
             int wallWidth = getRandomNumber(20, 50);
             int wallHeight = getRandomNumber(20, 50);
             Point p = getRandomPoint(minBorderX, minBorderY, dimension.width-wallWidth, dimension.height-wallHeight);
@@ -61,7 +57,7 @@ public class Wall implements Entity {
     }
 
     @Override
-    public void update() {
+    public void update(ModelContext modelContext) {
 
     }
 

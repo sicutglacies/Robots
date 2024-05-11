@@ -31,7 +31,6 @@ public class GameViewModel {
         this.gameWindow = gameWindow;
         this.logWindow = logWindow;
         initGameListeners();
-        initGameField();
     }
 
     private void initGameListeners() {
@@ -60,18 +59,13 @@ public class GameViewModel {
             @Override
             public void componentResized(final ComponentEvent e) {
                 super.componentResized(e);
-                GameModel.initModelSettings((gameWindow.getSize()));
+                GameModel.initModelSettings(gameWindow.getSize());
                 gameModel.addWalls();
             }
         });
 
         Localizer.registerListener(gameWindow);
         Localizer.registerListener(logWindow);
-    }
-
-    private void initGameField() {
-        gameModel.addRobot();
-        gameModel.addWalls();
     }
 
     public GameView getGameView() {

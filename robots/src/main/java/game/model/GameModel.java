@@ -7,12 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
-    private static ModelSettings modelSettings;
+    private static ModelSettings modelSettings = new ModelSettings(new Dimension(400, 400));
     private final List<Entity> entities = new ArrayList<>();
     private final PropertyChangeSupport pclSupport;
 
     public GameModel() {
         this.pclSupport = new PropertyChangeSupport(this);
+        this.initGameField();
+    }
+
+    private void addEntity(Entity entity) {
+        addPropertyChangeListener(entity);
+        this.entities.add(entity);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -24,7 +30,7 @@ public class GameModel {
 
     public void updateModel() {
         for (Entity entity : entities)
-            entity.update();
+            entity.update(new ModelContext(this));
     }
 
     public List<Entity> getEntities() {
@@ -33,15 +39,14 @@ public class GameModel {
 
     public void addWalls() {
         for (Entity wall : Wall.generateWalls()) {
-            addPropertyChangeListener(wall);
-            this.entities.add(wall);
+            addEntity(wall);
         }
     }
 
-    public void addRobot() {
+    public void initGameField() {
         Robot robot = new Robot();
-        addPropertyChangeListener(robot);
-        this.entities.add(robot);
+        this.addEntity(robot);
+        this.addWalls();
     }
 
     public void setTarget(Point point) {
@@ -61,7 +66,6 @@ public class GameModel {
         private ModelSettings(Dimension dimension) {
             this.dimension = new Dimension(dimension.width * 2, dimension.height * 2);
         }
-
         public Dimension getDimension() {
             return dimension;
         }
