@@ -1,11 +1,13 @@
 package game.viewmodels;
 
 import game.log.LogWindow;
+import game.model.Wall;
 import game.views.GameView;
 import game.views.GameWindow;
 import game.model.GameModel;
 import game.views.locale.Localizer;
 
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -57,7 +59,8 @@ public class GameViewModel {
             @Override
             public void componentResized(final ComponentEvent e) {
                 super.componentResized(e);
-                GameModel.initModelSettings((gameWindow.getSize()));
+                GameModel.initModelSettings(gameWindow.getSize());
+                gameModel.addWalls();
             }
         });
 

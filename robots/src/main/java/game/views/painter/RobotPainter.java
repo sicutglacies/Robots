@@ -12,13 +12,13 @@ public class RobotPainter extends Painter<Robot> {
         AffineTransform t = AffineTransform.getRotateInstance(drawable.getRobotDirection(), robotCenterX, robotCenterY);
         graphics.setTransform(t);
         graphics.setColor(Color.MAGENTA);
-        fillOval(graphics, robotCenterX, robotCenterY, 30, 10);
+        fillOval(graphics, robotCenterX - 15, robotCenterY, 30, 10);
         graphics.setColor(Color.BLACK);
-        drawOval(graphics, robotCenterX, robotCenterY, 30, 10);
+        drawOval(graphics, robotCenterX - 15, robotCenterY, 30, 10);
         graphics.setColor(Color.WHITE);
-        fillOval(graphics, robotCenterX  + 10, robotCenterY, 5, 5);
+        fillOval(graphics, robotCenterX - 5, robotCenterY, 5, 5);
         graphics.setColor(Color.BLACK);
-        drawOval(graphics, robotCenterX  + 10, robotCenterY, 5, 5);
+        drawOval(graphics, robotCenterX - 5, robotCenterY, 5, 5);
 
         context.paint(graphics, drawable.getTarget());
     }

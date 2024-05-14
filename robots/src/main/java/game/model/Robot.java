@@ -2,7 +2,9 @@ package game.model;
 
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
+import java.util.List;
 
 
 public class Robot implements Entity {
@@ -49,7 +51,26 @@ public class Robot implements Entity {
         return target;
     }
 
-    private void moveRobot(double velocity, double angularVelocity, double duration) {
+    private Point2D.Double getAllowedStep (
+            double currX, double currY, double stepX, double stepY, List<Wall> walls) {
+
+        for (Wall wall: walls) {
+            // Get wall rectangle coordinates
+            double xMin = wall.point().x;
+            double yMin = wall.point().y;
+            double xMax = xMin + wall.width();
+            double yMax = yMin + wall.height();
+
+            // If robot step is on wall, then return the closest point on the wall border
+            if (stepX >= xMin && stepX <= xMax && stepY >= yMin && stepY <= yMax) {
+                stepX = Math.max(xMin, Math.min(currX, xMax));
+                stepY = Math.max(yMin, Math.min(currY, yMax));
+            }
+        }
+        return new Point2D.Double(stepX, stepY);
+    }
+
+    private void moveRobot(double velocity, double angularVelocity, double duration, List<Wall> walls) {
         velocity = MathUtils.applyLimits(velocity, 0, Robot.maxVelocity);
         angularVelocity = MathUtils.applyLimits(angularVelocity, -Robot.maxAngularVelocity, Robot.maxAngularVelocity);
         double newX = getPositionX() + velocity / angularVelocity *
@@ -64,14 +85,20 @@ public class Robot implements Entity {
         if (!Double.isFinite(newY)) {
             newY = getPositionY() + velocity * duration * Math.sin(getRobotDirection());
         }
-        setPositionX(MathUtils.normalize(newX, 0, GameModel.getModelSettings().getDimension().width));
-        setPositionY(MathUtils.normalize(newY, 0, GameModel.getModelSettings().getDimension().height));
+
+        newX = MathUtils.normalize(newX, 0, GameModel.getModelSettings().getDimension().width);
+        newY = MathUtils.normalize(newY, 0, GameModel.getModelSettings().getDimension().height);
+
+        Point2D.Double allowedStep = getAllowedStep(getPositionX(), getPositionY(), newX, newY, walls);
+
+        setPositionX(allowedStep.x);
+        setPositionY(allowedStep.y);
         double newDirection = MathUtils.asNormalizedRadians(getRobotDirection() + angularVelocity * duration);
         setRobotDirection(newDirection);
     }
 
     @Override
-    public void update() {
+    public void update(ModelContext modelContext) {
         double distance = MathUtils.distance(target.p().x, target.p().y,
                 getPositionX(), getPositionY());
         if (distance < 0.5) {
@@ -83,7 +110,7 @@ public class Robot implements Entity {
 
         double angularVelocity = MathUtils.calculateAngularVelocity(angleToTarget, getRobotDirection(), Robot.maxAngularVelocity);
 
-        moveRobot(velocity, angularVelocity, 10);
+        moveRobot(velocity, angularVelocity, 10, modelContext.findEntities(Wall.class));
     }
 
     @Override
