@@ -4,7 +4,6 @@ package game.model;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -57,10 +56,10 @@ public class Robot implements Entity {
 
         for (Wall wall: walls) {
             // Get wall rectangle coordinates
-            double xMin = wall.getPoint().x;
-            double yMin = wall.getPoint().y;
-            double xMax = xMin + wall.getWidth();
-            double yMax = yMin + wall.getHeight();
+            double xMin = wall.point().x;
+            double yMin = wall.point().y;
+            double xMax = xMin + wall.width();
+            double yMax = yMin + wall.height();
 
             // If robot step is on wall, then return the closest point on the wall border
             if (stepX >= xMin && stepX <= xMax && stepY >= yMin && stepY <= yMax) {

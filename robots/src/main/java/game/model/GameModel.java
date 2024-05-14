@@ -10,6 +10,7 @@ public class GameModel {
     private static ModelSettings modelSettings = new ModelSettings(new Dimension(400, 400));
     private final List<Entity> entities = new ArrayList<>();
     private final PropertyChangeSupport pclSupport;
+    private final ModelContext modelContext = new ModelContext(this);
 
     public GameModel() {
         this.pclSupport = new PropertyChangeSupport(this);
@@ -30,7 +31,7 @@ public class GameModel {
 
     public void updateModel() {
         for (Entity entity : entities)
-            entity.update(new ModelContext(this));
+            entity.update(modelContext);
     }
 
     public List<Entity> getEntities() {
@@ -43,7 +44,7 @@ public class GameModel {
         }
     }
 
-    public void initGameField() {
+    private void initGameField() {
         Robot robot = new Robot();
         this.addEntity(robot);
         this.addWalls();

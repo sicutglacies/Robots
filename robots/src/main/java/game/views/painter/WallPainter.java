@@ -1,6 +1,5 @@
 package game.views.painter;
 
-import game.model.Target;
 import game.model.Wall;
 
 import java.awt.*;
@@ -12,8 +11,8 @@ public class WallPainter extends Painter<Wall> {
         AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
         graphics.setTransform(t);
         graphics.setColor(Color.GRAY);
-        fillRectangle(graphics, drawable.getPoint().x, drawable.getPoint().y, drawable.getWidth(), drawable.getHeight());
+        fillRectangle(graphics, drawable.point().x, drawable.point().y, drawable.width(), drawable.height());
         graphics.setColor(Color.BLACK);
-        drawRectangle(graphics, drawable.getPoint().x, drawable.getPoint().y, drawable.getWidth(), drawable.getHeight());
+        drawRectangle(graphics, drawable.point().x, drawable.point().y, drawable.width(), drawable.height());
     }
 }
