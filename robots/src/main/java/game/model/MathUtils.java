@@ -1,5 +1,9 @@
 package game.model;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
 public class MathUtils {
     public static double distance(double x1, double y1, double x2, double y2) {
         double diffX = x1 - x2;
@@ -41,5 +45,20 @@ public class MathUtils {
         if (value < min)
             return min;
         return Math.min(value, max);
+    }
+
+    public static int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
+    }
+
+    public static Point getRandomPoint(int xMin, int yMin, int xMax, int yMax) {
+        int randomX = getRandomNumber(0, xMax);
+        int randomY = getRandomNumber(0, yMax);
+
+        while (randomX >= 0 && randomX <= xMin && randomY >= 0 & randomY <= yMin) {
+            randomX = getRandomNumber(0, xMax);
+            randomY = getRandomNumber(0, yMax);
+        }
+        return new Point(randomX, randomY);
     }
 }

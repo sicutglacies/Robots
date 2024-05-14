@@ -1,5 +1,7 @@
 package game;
 
+import game.log.LogWindow;
+import game.log.Logger;
 import game.viewmodels.EntitiesProvider;
 import game.viewmodels.SimpleEntityProvider;
 import game.views.GameView;
@@ -9,6 +11,7 @@ import game.viewmodels.GameViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -21,7 +24,8 @@ public class Main {
         EntitiesProvider entitiesProvider = new SimpleEntityProvider(gameModel);
         GameView gameView = new GameView(entitiesProvider);
         GameWindow gameWindow = new GameWindow(gameView);
-        GameViewModel viewModel = new GameViewModel(gameModel, gameWindow);
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
+        GameViewModel viewModel = new GameViewModel(gameModel, gameWindow, logWindow);
 
         SwingUtilities.invokeLater(() -> {
             game.MainApplicationFrame frame = new MainApplicationFrame(viewModel);
