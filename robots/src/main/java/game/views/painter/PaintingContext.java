@@ -1,8 +1,6 @@
 package game.views.painter;
 
-import game.model.Robot;
-import game.model.Target;
-import game.model.Wall;
+import game.model.*;
 
 import java.awt.*;
 import java.util.Map;
@@ -12,7 +10,8 @@ public class PaintingContext {
 
     public PaintingContext() {
         this.painters = Map.of(
-            Robot.class, new RobotPainter(),
+            Ally.class, new AllyPainter(),
+            Enemy.class, new EnemyPainter(),
             Target.class, new TargetPainter(),
             Wall.class, new WallPainter()
         );

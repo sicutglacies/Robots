@@ -2,7 +2,7 @@ package game.model;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.util.List;
 
 public class MathUtils {
     public static double distance(double x1, double y1, double x2, double y2) {
@@ -28,8 +28,8 @@ public class MathUtils {
         return asNormalizedRadians(Math.atan2(diffY, diffX));
     }
 
-    public static double calculateAngularVelocity(double angle, double robotDirection, double maxAngularVelocity) {
-        double diff = angle - robotDirection;
+    public static double calculateAngularVelocity(double angle, double direction, double maxAngularVelocity) {
+        double diff = angle - direction;
         diff = asNormalizedRadians(diff);
 
         return Math.signum(diff) * Math.min(maxAngularVelocity, Math.abs(diff));
@@ -47,17 +47,27 @@ public class MathUtils {
         return Math.min(value, max);
     }
 
-    public static int getRandomNumber(int min, int max) {
+    private static boolean OnRobot(int randomX, int randomY, List<Point2D.Double> positions) {
+        for (Point2D.Double position : positions) {
+            if (Math.abs(randomX - position.x) < 50 && Math.abs(randomY - position.y) < 50)
+                return false;
+        }
+        return true;
+    }
+
+    public static int getRandomIntNumber(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }
 
-    public static Point getRandomPoint(int xMin, int yMin, int xMax, int yMax) {
-        int randomX = getRandomNumber(0, xMax);
-        int randomY = getRandomNumber(0, yMax);
+    public static double getRandomNumber(double min, double max) { return ((Math.random() * (max - min)) + min); }
 
-        while (randomX >= 0 && randomX <= xMin && randomY >= 0 & randomY <= yMin) {
-            randomX = getRandomNumber(0, xMax);
-            randomY = getRandomNumber(0, yMax);
+    public static Point getRandomPoint(int xMin, int yMin, int xMax, int yMax, List<Point2D.Double> positions) {
+        int randomX = getRandomIntNumber(0, xMax);
+        int randomY = getRandomIntNumber(0, yMax);
+
+        while ((randomX < xMin && randomY < yMin) || !OnRobot(randomX, randomY, positions)) {
+            randomX = getRandomIntNumber(0, xMax);
+            randomY = getRandomIntNumber(0, yMax);
         }
         return new Point(randomX, randomY);
     }
