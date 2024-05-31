@@ -1,28 +1,13 @@
 package game.model;
 
-
-import java.awt.*;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
-import java.util.List;
 
-
-public class Robot implements Entity {
-    private double positionX;
-    private double positionY;
-    private Target target;
-    public static final double maxVelocity = 0.1;
-    public static final double maxAngularVelocity = 0.01;
-
-    private volatile double robotDirection;
-
-    public Robot() {
-        this.positionX = 100;
-        this.positionY = 100;
-        this.target = new Target(new Point(100, 150));
-        this.robotDirection = 0;
-    }
-
+public abstract class Robot {
+    protected double positionX;
+    protected double positionY;
+    public final double maxVelocity = 0.1;
+    public final double maxAngularVelocity = 0.01;
+    protected volatile double direction;
     public double getPositionX() {
         return positionX;
     }
@@ -39,20 +24,15 @@ public class Robot implements Entity {
         this.positionY = positionY;
     }
 
-    public double getRobotDirection() {
-        return robotDirection;
+    public double getDirection() {
+        return direction;
+    }
+    public void setDirection(double direction) {
+        this.direction = direction;
     }
 
-    public void setRobotDirection(double robotDirection) {
-        this.robotDirection = robotDirection;
-    }
-
-    public Target getTarget() {
-        return target;
-    }
-
-    private Point2D.Double getAllowedStep (
-            double currX, double currY, double stepX, double stepY, List<Wall> walls) {
+    protected Point2D.Double getAllowedStep (
+            double currX, double currY, double stepX, double stepY, java.util.List<Wall> walls) {
 
         for (Wall wall: walls) {
             // Get wall rectangle coordinates
@@ -70,54 +50,25 @@ public class Robot implements Entity {
         return new Point2D.Double(stepX, stepY);
     }
 
-    private void moveRobot(double velocity, double angularVelocity, double duration, List<Wall> walls) {
-        velocity = MathUtils.applyLimits(velocity, 0, Robot.maxVelocity);
-        angularVelocity = MathUtils.applyLimits(angularVelocity, -Robot.maxAngularVelocity, Robot.maxAngularVelocity);
+    protected Point2D.Double calcStep(double velocity, double angularVelocity, double duration) {
+        velocity = MathUtils.applyLimits(velocity, 0, maxVelocity);
+        angularVelocity = MathUtils.applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
         double newX = getPositionX() + velocity / angularVelocity *
-                (Math.sin(getRobotDirection() + angularVelocity * duration) -
-                        Math.sin(getRobotDirection()));
+                (Math.sin(getDirection() + angularVelocity * duration) -
+                        Math.sin(getDirection()));
         if (!Double.isFinite(newX)) {
-            newX = getPositionX() + velocity * duration * Math.cos(getRobotDirection());
+            newX = getPositionX() + velocity * duration * Math.cos(getDirection());
         }
         double newY = getPositionY() - velocity / angularVelocity *
-                (Math.cos(getRobotDirection() + angularVelocity * duration) -
-                        Math.cos(getRobotDirection()));
+                (Math.cos(getDirection() + angularVelocity * duration) -
+                        Math.cos(getDirection()));
         if (!Double.isFinite(newY)) {
-            newY = getPositionY() + velocity * duration * Math.sin(getRobotDirection());
+            newY = getPositionY() + velocity * duration * Math.sin(getDirection());
         }
 
         newX = MathUtils.normalize(newX, 0, GameModel.getModelSettings().getDimension().width);
         newY = MathUtils.normalize(newY, 0, GameModel.getModelSettings().getDimension().height);
 
-        Point2D.Double allowedStep = getAllowedStep(getPositionX(), getPositionY(), newX, newY, walls);
-
-        setPositionX(allowedStep.x);
-        setPositionY(allowedStep.y);
-        double newDirection = MathUtils.asNormalizedRadians(getRobotDirection() + angularVelocity * duration);
-        setRobotDirection(newDirection);
-    }
-
-    @Override
-    public void update(ModelContext modelContext) {
-        double distance = MathUtils.distance(target.p().x, target.p().y,
-                getPositionX(), getPositionY());
-        if (distance < 0.5) {
-            return;
-        }
-        double velocity = Robot.maxVelocity;
-        double angleToTarget = MathUtils.angleTo(getPositionX(), getPositionY(),
-                target.p().x, target.p().y);
-
-        double angularVelocity = MathUtils.calculateAngularVelocity(angleToTarget, getRobotDirection(), Robot.maxAngularVelocity);
-
-        moveRobot(velocity, angularVelocity, 10, modelContext.findEntities(Wall.class));
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("New Point")) {
-            Point point = (Point) evt.getNewValue();
-            this.target = new Target(new Point(point.x * 2, point.y * 2));
-        }
+        return new Point2D.Double(newX, newY);
     }
 }

@@ -1,14 +1,19 @@
 package game.model;
 
+import game.log.Logger;
+
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class GameModel {
+public class GameModel implements PropertyChangeListener {
     private static ModelSettings modelSettings = new ModelSettings(new Dimension(400, 400));
-    private final List<Entity> entities = new ArrayList<>();
+    private final List<Entity> entities = new CopyOnWriteArrayList<>();
     private final PropertyChangeSupport pclSupport;
     private final ModelContext modelContext = new ModelContext(this);
 
@@ -26,8 +31,7 @@ public class GameModel {
         pclSupport.addPropertyChangeListener(pcl);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener pcl) { pclSupport.removePropertyChangeListener(pcl);
-    }
+    public void removePropertyChangeListener(PropertyChangeListener pcl) { pclSupport.removePropertyChangeListener(pcl); }
 
     public void updateModel() {
         for (Entity entity : entities)
@@ -39,14 +43,28 @@ public class GameModel {
     }
 
     public void addWalls() {
-        for (Entity wall : Wall.generateWalls()) {
+        List<Point2D.Double> positions = new ArrayList<>();
+        for (Entity entity : getEntities()) {
+            if (entity.getClass() != Wall.class) {
+                Robot robot = (Robot) entity;
+                positions.add(new Point2D.Double(robot.positionX, robot.positionY));
+            }
+        };
+
+        for (Entity wall : Wall.generateWalls(positions)) {
             addEntity(wall);
         }
     }
 
     private void initGameField() {
-        Robot robot = new Robot();
-        this.addEntity(robot);
+        Ally ally = new Ally();
+        this.addEntity(ally);
+        for (int i = 0; i < 3; i++) {
+            Enemy enemy = new Enemy();
+            enemy.addPropertyChangeListener(this);
+            ally.addPropertyChangeListener(enemy);
+            this.addEntity(enemy);
+        }
         this.addWalls();
     }
 
@@ -69,6 +87,14 @@ public class GameModel {
         }
         public Dimension getDimension() {
             return dimension;
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("Game Over")) {
+            entities.clear();
+            Logger.debug("Game Over");
         }
     }
 }
